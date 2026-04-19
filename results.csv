@@ -1,4 +1,0 @@
-age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,slope,ca,thal,Risk,Probability
-55,1,0,140,250,0,1,150,0,1.5,2,0,2,High,87.0
-45,0,1,130,200,0,0,170,0,0.5,2,0,2,High,99.0
-60,1,2,150,300,1,1,140,1,2.3,1,2,3,Low,12.0
