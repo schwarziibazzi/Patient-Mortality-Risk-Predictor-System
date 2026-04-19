@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | Patient Mortality Risk Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #6b7280;
+            transition: color 0.3s;
+            padding: 8px 16px;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover {
+            background: #f3f4f6;
+            color: #667eea;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .form-subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        /* Section Styles */
+        .form-section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #667eea;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+            color: #667eea;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Profile Picture Upload */
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .current-picture {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .current-picture img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .picture-upload {
+            margin-top: 15px;
+        }
+
+        .picture-upload input {
+            display: none;
+        }
+
+        .picture-upload label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .picture-upload label:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .remove-picture {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .remove-picture:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        /* Messages */
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .btn-primary {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            padding: 12px 30px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1><i class="fas fa-heartbeat"></i> Patient Mortality Risk Predictor</h1>
+            </div>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                {% if user_profile.role == 'admin' %}
+                <a href="/dashboard/"><i class="fas fa-chart-line"></i> Dashboard</a>
+                {% endif %}
+                <a href="{% url 'profile' %}" style="background: #f3f4f6; color: #667eea;">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="/logout/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h1 class="form-title">Edit Profile</h1>
+            <p class="form-subtitle">Update your personal and professional information</p>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Profile Picture Section -->
+                <div class="profile-picture-section">
+                    <div class="current-picture">
+                        <img src="{{ user_profile.get_profile_picture_url }}" alt="Profile Picture" id="profilePreview">
+                    </div>
+                    <div class="picture-upload">
+                        <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*">
+                        <label for="profilePictureInput">
+                            <i class="fas fa-camera"></i> Change Profile Picture
+                        </label>
+                        {% if user_profile.profile_picture %}
+                        <button type="button" class="remove-picture" onclick="confirmRemovePicture()">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-circle"></i> Personal Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="id_first_name"><i class="fas fa-user"></i> First Name</label>
+                            {{ user_form.first_name }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_last_name"><i class="fas fa-user"></i> Last Name</label>
+                            {{ user_form.last_name }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_email"><i class="fas fa-envelope"></i> Email Address</label>
+                            {{ user_form.email }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_phone_number"><i class="fas fa-phone"></i> Phone Number</label>
+                            {{ profile_form.phone_number }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_date_of_birth"><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                            {{ profile_form.date_of_birth }}
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="id_bio"><i class="fas fa-info-circle"></i> Bio</label>
+                            {{ profile_form.bio }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Information Section -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-briefcase"></i> Professional Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="id_worker_id"><i class="fas fa-id-card"></i> Worker ID</label>
+                            {{ profile_form.worker_id }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_hospital_name"><i class="fas fa-hospital"></i> Hospital Name</label>
+                            {{ profile_form.hospital_name }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_clinic_name"><i class="fas fa-clinic-medical"></i> Clinic Name</label>
+                            {{ profile_form.clinic_name }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_department"><i class="fas fa-building"></i> Department</label>
+                            {{ profile_form.department }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_position"><i class="fas fa-user-tie"></i> Position</label>
+                            {{ profile_form.position }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_specialization"><i class="fas fa-stethoscope"></i> Specialization</label>
+                            {{ profile_form.specialization }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Information Section -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-map-marker-alt"></i> Address Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="id_address"><i class="fas fa-location-dot"></i> Address</label>
+                            {{ profile_form.address }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_city"><i class="fas fa-city"></i> City</label>
+                            {{ profile_form.city }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_country"><i class="fas fa-globe"></i> Country</label>
+                            {{ profile_form.country }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_postal_code"><i class="fas fa-mail-bulk"></i> Postal Code</label>
+                            {{ profile_form.postal_code }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Links Section -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-link"></i> Professional Links
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="id_linkedin_url"><i class="fab fa-linkedin"></i> LinkedIn URL</label>
+                            {{ profile_form.linkedin_url }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_website_url"><i class="fas fa-globe"></i> Website URL</label>
+                            {{ profile_form.website_url }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{% url 'profile' %}" class="btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Preview profile picture before upload
+        const profilePictureInput = document.getElementById('profilePictureInput');
+        const profilePreview = document.getElementById('profilePreview');
+
+        profilePictureInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Confirm remove picture
+        function confirmRemovePicture() {
+            if (confirm('Are you sure you want to remove your profile picture?')) {
+                // Create a form to submit the delete request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{% url 'profile_delete_picture' %}";
+                form.innerHTML = '{% csrf_token %}';
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+</html>

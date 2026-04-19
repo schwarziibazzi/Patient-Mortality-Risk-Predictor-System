@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Data | Patient Mortality Risk Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: white;
+            border-radius: 20px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #6b7280;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a:hover {
+            background: #f3f4f6;
+            color: #667eea;
+        }
+
+        .nav-links a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-logout {
+            background: #ef4444;
+            color: white !important;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626 !important;
+            color: white !important;
+        }
+
+        /* Card */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f9fafb;
+        }
+
+        .upload-icon {
+            font-size: 60px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-heartbeat"></i>  Mortality Risk Predictor</h1>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="active">
+                    <i class="fas fa-upload"></i> Upload
+                </a>
+                {% if is_admin %}
+                <a href="/dashboard/">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                {% endif %}
+                <a href="{% url 'profile' %}">
+                    <i class="fas fa-user-circle"></i> Profile
+                </a>
+                <a href="/logout/" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card">
+            <div class="logo" style="margin-bottom: 20px;">
+                <h1><i class="fas fa-heartbeat"></i> Patient Mortality Risk Predictor</h1>
+                <p style="color: #666; margin-top: 10px;">Upload patient data for mortality risk prediction</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3>Click to upload file</h3>
+                    <p style="color: #666; margin-top: 10px;">Supports CSV or Excel files</p>
+                    <input type="file" name="file" id="fileInput" style="display: none;" accept=".csv,.xlsx" onchange="this.form.submit()">
+                </div>
+            </form>
+
+            <div class="user-info">
+                <div class="user-badge">
+                    <i class="fas fa-user"></i> {{ request.user.username }}
+                    {% if is_admin %}
+                    <span class="admin-badge"><i class="fas fa-shield-alt"></i> Admin</span>
+                    {% endif %}
+                </div>
+                <div>
+                    <small style="color: #666;">
+                        <i class="fas fa-chart-line"></i> AI-Powered Predictions
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

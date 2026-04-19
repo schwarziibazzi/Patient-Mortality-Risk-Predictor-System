@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Mortality Risk Analysis Report | Clinical Insights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+        }
+
+        .report-date {
+            color: #666;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* Executive Summary */
+        .executive-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .executive-summary h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .summary-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .alert-level {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-top: 15px;
+        }
+
+        .alert-critical {
+            background: #dc2626;
+            color: white;
+        }
+
+        .alert-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .alert-moderate {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .alert-low {
+            background: #10b981;
+            color: white;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Insights Sections */
+        .insights-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .insights-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .insight-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f9fafb;
+            border-radius: 12px;
+            border-left: 3px solid;
+            transition: all 0.3s;
+        }
+
+        .insight-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .insight-critical {
+            border-left-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .insight-warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .insight-info {
+            border-left-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .insight-success {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .insight-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .recommendation-box {
+            background: #f0fdf4;
+            border: 1px solid #10b981;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .recommendation-box h4 {
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        /* Risk Factors Table */
+        .risk-factors {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f9fafb;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .risk-high {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .risk-low {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-heartbeat"></i> Patient Mortality Risk Assessment Report</h1>
+            <p class="report-date">Generated: {% now "F j, Y, g:i a" %}</p>
+        </div>
+
+        <!-- Executive Summary with AI Insights -->
+        <div class="executive-summary">
+            <h2><i class="fas fa-chart-line"></i> Executive Summary</h2>
+            <div class="summary-text">
+                {% if high_risk > total_patients|divisibleby:2 %}
+                    <strong>⚠️ CRITICAL FINDING:</strong> 
+                    More than 50% of patients in this cohort are at HIGH RISK for cardiovascular disease. 
+                    Immediate medical attention and lifestyle interventions are strongly recommended.
+                {% elif high_risk > total_patients|divisibleby:3 %}
+                    <strong>⚠️ MODERATE-HIGH ALERT:</strong> 
+                    A significant portion ({{ high_risk }} out of {{ total_patients }}) of patients show elevated risk markers.
+                    Preventive cardiology consultation advised for these individuals.
+                {% elif high_risk > 0 %}
+                    <strong>📊 OBSERVATION:</strong> 
+                    {{ high_risk }} patient(s) identified as high risk. Targeted interventions and regular monitoring recommended.
+                {% else %}
+                    <strong>✅ FAVORABLE OUTCOME:</strong> 
+                    No high-risk patients detected in this analysis. Continue preventive health measures.
+                {% endif %}
+            </div>
+            <div>
+                {% if high_risk_percentage > 50 %}
+                    <span class="alert-level alert-critical"><i class="fas fa-exclamation-triangle"></i> Critical Risk Level</span>
+                {% elif high_risk_percentage > 30 %}
+                    <span class="alert-level alert-warning"><i class="fas fa-chart-line"></i> High Risk Level</span>
+                {% elif high_risk_percentage > 10 %}
+                    <span class="alert-level alert-moderate"><i class="fas fa-info-circle"></i> Moderate Risk Level</span>
+                {% else %}
+                    <span class="alert-level alert-low"><i class="fas fa-check-circle"></i> Low Risk Level</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users" style="color: #667eea;"></i>
+                </div>
+                <div class="stat-value">{{ total_patients }}</div>
+                <div class="stat-label">Total Patients Analyzed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-circle" style="color: #dc2626;"></i>
+                </div>
+                <div class="stat-value" style="color: #dc2626;">{{ high_risk }}</div>
+                <div class="stat-label">High Risk Patients</div>
+                <small>{{ high_risk_percentage }}% of total</small>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                </div>
+                <div class="stat-value" style="color: #10b981;">{{ low_risk }}</div>
+                <div class="stat-label">Low Risk Patients</div>
+                <small>{{ low_risk_percentage }}% of total</small>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-pie" style="color: #f59e0b;"></i>
+                </div>
+                <div class="stat-value">{{ risk_ratio|default:"N/A" }}</div>
+                <div class="stat-label">Risk Ratio (High:Low)</div>
+            </div>
+        </div>
+
+        <!-- Clinical Insights -->
+        <div class="insights-section">
+            <h2 class="insights-title"><i class="fas fa-brain"></i> Clinical Insights & Interpretation</h2>
+            
+            {% if high_risk > 0 %}
+            <div class="insight-item insight-critical">
+                <i class="fas fa-heartbeat insight-icon"></i>
+                <strong>High-Risk Patient Profile:</strong> 
+                Analysis indicates that {{ high_risk }} patients ({{ high_risk_percentage }}%) exhibit significant risk markers for cardiovascular events. 
+                Key indicators include elevated cholesterol, hypertension markers, and abnormal ECG findings in this subgroup.
+            </div>
+            {% endif %}
+            
+            <div class="insight-item insight-info">
+                <i class="fas fa-chart-line insight-icon"></i>
+                <strong>Population Risk Distribution:</strong> 
+                The risk profile shows {% if high_risk > low_risk %}predominantly high-risk cases{% else %}predominantly low-risk cases{% endif %}, 
+                suggesting {% if high_risk > low_risk %}an urgent need for population-level interventions{% else %}effective current health management{% endif %}.
+            </div>
+            
+            <div class="insight-item insight-warning">
+                <i class="fas fa-exclamation-triangle insight-icon"></i>
+                <strong>Clinical Recommendation:</strong> 
+                {% if high_risk > 10 %}
+                    High-risk patients require immediate cardiology referral, lifestyle modification program, and regular monitoring (every 3-6 months).
+                {% elif high_risk > 0 %}
+                    High-risk patients should be scheduled for follow-up assessments within 1-2 months for preventive intervention.
+                {% else %}
+                    Continue current preventive health strategies and maintain annual screening for early detection.
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Risk Factor Analysis -->
+        <div class="insights-section">
+            <h2 class="insights-title"><i class="fas fa-chart-bar"></i> Key Risk Factor Analysis</h2>
+            
+            <div class="insight-item insight-success">
+                <i class="fas fa-heart insight-icon"></i>
+                <strong>Primary Risk Indicators:</strong>
+                <ul style="margin-top: 10px; margin-left: 30px;">
+                    <li>Chest Pain Type (cp): Significant predictor in high-risk cases</li>
+                    <li>Maximum Heart Rate (thalach): Reduced rates correlate with higher risk</li>
+                    <li>ST Depression (oldpeak): Elevated levels indicate cardiac stress</li>
+                    <li>Cholesterol Levels (chol): Major contributing factor in risk stratification</li>
+                </ul>
+            </div>
+            
+            <div class="recommendation-box">
+                <h4><i class="fas fa-clinic-medical"></i> Immediate Action Items</h4>
+                <ul style="margin-left: 20px;">
+                    <li>📋 Schedule cardiology consultation for all high-risk patients</li>
+                    <li>📊 Conduct additional diagnostic tests (Echocardiogram, Stress Test) for high-risk cases</li>
+                    <li>💊 Review and optimize medication regimens for hypertension and cholesterol management</li>
+                    <li>🏃 Implement lifestyle intervention program (diet, exercise, smoking cessation)</li>
+                    <li>📈 Establish 3-month follow-up protocol for high-risk patient monitoring</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Detailed Patient Table -->
+        <div class="risk-factors">
+            <h2 class="insights-title"><i class="fas fa-table"></i> Individual Patient Risk Assessment</h2>
+            <div style="overflow-x: auto; max-height: 500px;">
+                {{ table|safe }}
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="btn-group">
+            <a href="/download/" class="btn btn-success">
+                <i class="fas fa-download"></i> Download Full Report (Excel)
+            </a>
+            <a href="/download-pdf/" class="btn btn-primary">
+                <i class="fas fa-file-pdf"></i> Download Clinical Report (PDF)
+            </a>
+            <a href="/" class="btn btn-secondary">
+                <i class="fas fa-upload"></i> Analyze New Dataset
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Chart for risk distribution
+        const ctx = document.createElement('canvas');
+        document.querySelector('.stats-grid').after(ctx);
+        ctx.id = 'riskChart';
+        ctx.style.maxHeight = '400px';
+        ctx.style.marginBottom = '30px';
+        ctx.style.background = 'white';
+        ctx.style.borderRadius = '20px';
+        ctx.style.padding = '20px';
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['High Risk Patients', 'Low Risk Patients'],
+                datasets: [{
+                    data: [{{ high_risk }}, {{ low_risk }}],
+                    backgroundColor: ['#dc2626', '#10b981'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 14 }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Risk Distribution Overview',
+                        font: { size: 18, weight: 'bold' }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = {{ high_risk }} + {{ low_risk }};
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} patients (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
